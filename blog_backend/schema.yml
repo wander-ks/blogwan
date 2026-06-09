@@ -1,0 +1,1521 @@
+openapi: 3.0.3
+info:
+  title: BlogWan API 文档
+  version: 1.0.0
+  description: 博客平台后端 API 接口文档，包含用户认证、文章、评论、通知、积分等功能。
+paths:
+  /api/v1/articles/:
+    get:
+      operationId: api_v1_articles_list
+      description: 文章视图集：提供 list, create, retrieve, update, destroy, like 操作
+      parameters:
+      - in: query
+        name: author__username
+        schema:
+          type: string
+      - in: query
+        name: is_published
+        schema:
+          type: boolean
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedArticleListList'
+          description: ''
+    post:
+      operationId: api_v1_articles_create
+      description: 文章视图集：提供 list, create, retrieve, update, destroy, like 操作
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ArticleWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ArticleWriteRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleWrite'
+          description: ''
+  /api/v1/articles/{id}/:
+    get:
+      operationId: api_v1_articles_retrieve
+      description: 文章视图集：提供 list, create, retrieve, update, destroy, like 操作
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 文章.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleDetail'
+          description: ''
+    put:
+      operationId: api_v1_articles_update
+      description: 文章视图集：提供 list, create, retrieve, update, destroy, like 操作
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 文章.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ArticleWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ArticleWriteRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleWrite'
+          description: ''
+    patch:
+      operationId: api_v1_articles_partial_update
+      description: 文章视图集：提供 list, create, retrieve, update, destroy, like 操作
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 文章.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedArticleWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedArticleWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedArticleWriteRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleWrite'
+          description: ''
+    delete:
+      operationId: api_v1_articles_destroy
+      description: 文章视图集：提供 list, create, retrieve, update, destroy, like 操作
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 文章.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/articles/{id}/download/:
+    post:
+      operationId: api_v1_articles_download_create
+      description: 文章视图集：提供 list, create, retrieve, update, destroy, like 操作
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 文章.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleDetailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ArticleDetailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ArticleDetailRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleDetail'
+          description: ''
+  /api/v1/articles/{id}/like/:
+    post:
+      operationId: api_v1_articles_like_create
+      description: 点赞/取消点赞接口
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 文章.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleDetailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ArticleDetailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ArticleDetailRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleDetail'
+          description: ''
+  /api/v1/auth/login/:
+    post:
+      operationId: api_v1_auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/v1/auth/login/refresh/:
+    post:
+      operationId: api_v1_auth_login_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/auth/profile/:
+    get:
+      operationId: api_v1_auth_profile_retrieve
+      description: 用户个人资料获取与更新
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    put:
+      operationId: api_v1_auth_profile_update
+      description: 用户个人资料获取与更新
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    patch:
+      operationId: api_v1_auth_profile_partial_update
+      description: 用户个人资料获取与更新
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/v1/auth/register/:
+    post:
+      operationId: api_v1_auth_register_create
+      description: 用户注册视图
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegister'
+          description: ''
+  /api/v1/comments/:
+    get:
+      operationId: api_v1_comments_list
+      description: |-
+        评论视图集：
+        - list: 按文章ID获取顶级评论（parent=None）
+        - create: 发表评论（需登录）
+        - update/destroy: 权限控制
+      parameters:
+      - in: query
+        name: article
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: parent
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCommentList'
+          description: ''
+    post:
+      operationId: api_v1_comments_create
+      description: |-
+        评论视图集：
+        - list: 按文章ID获取顶级评论（parent=None）
+        - create: 发表评论（需登录）
+        - update/destroy: 权限控制
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentWriteRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentWrite'
+          description: ''
+  /api/v1/comments/{id}/:
+    get:
+      operationId: api_v1_comments_retrieve
+      description: |-
+        评论视图集：
+        - list: 按文章ID获取顶级评论（parent=None）
+        - create: 发表评论（需登录）
+        - update/destroy: 权限控制
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 评论.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+    put:
+      operationId: api_v1_comments_update
+      description: |-
+        评论视图集：
+        - list: 按文章ID获取顶级评论（parent=None）
+        - create: 发表评论（需登录）
+        - update/destroy: 权限控制
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 评论.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentWriteRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentWrite'
+          description: ''
+    patch:
+      operationId: api_v1_comments_partial_update
+      description: |-
+        评论视图集：
+        - list: 按文章ID获取顶级评论（parent=None）
+        - create: 发表评论（需登录）
+        - update/destroy: 权限控制
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 评论.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentWriteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentWriteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCommentWriteRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentWrite'
+          description: ''
+    delete:
+      operationId: api_v1_comments_destroy
+      description: |-
+        评论视图集：
+        - list: 按文章ID获取顶级评论（parent=None）
+        - create: 发表评论（需登录）
+        - update/destroy: 权限控制
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this 评论.
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/follows/follow/{user_id}/:
+    post:
+      operationId: api_v1_follows_follow_create
+      description: 关注某个用户
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FollowRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FollowRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FollowRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follow'
+          description: ''
+  /api/v1/follows/follower_list/:
+    get:
+      operationId: api_v1_follows_follower_list_retrieve
+      description: 当前用户的粉丝列表
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follow'
+          description: ''
+  /api/v1/follows/following_list/:
+    get:
+      operationId: api_v1_follows_following_list_retrieve
+      description: 当前用户关注的用户列表
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follow'
+          description: ''
+  /api/v1/follows/status/{user_id}/:
+    get:
+      operationId: api_v1_follows_status_retrieve
+      description: 查询当前用户是否关注某用户
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follow'
+          description: ''
+  /api/v1/follows/unfollow/{user_id}/:
+    post:
+      operationId: api_v1_follows_unfollow_create
+      description: 取消关注
+      parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FollowRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FollowRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FollowRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follow'
+          description: ''
+  /api/v1/notifications/messages/:
+    get:
+      operationId: api_v1_notifications_messages_list
+      description: 收件箱视图：仅支持 GET (列表、详情) 和标记已读
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMessageList'
+          description: ''
+  /api/v1/notifications/messages/{id}/:
+    get:
+      operationId: api_v1_notifications_messages_retrieve
+      description: 收件箱视图：仅支持 GET (列表、详情) 和标记已读
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+  /api/v1/notifications/messages/{id}/delete/:
+    delete:
+      operationId: api_v1_notifications_messages_delete_destroy
+      description: 收件箱视图：仅支持 GET (列表、详情) 和标记已读
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/notifications/messages/{id}/mark_read/:
+    post:
+      operationId: api_v1_notifications_messages_mark_read_create
+      description: 收件箱视图：仅支持 GET (列表、详情) 和标记已读
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+  /api/v1/notifications/messages/mark-all-read/:
+    post:
+      operationId: api_v1_notifications_messages_mark_all_read_create
+      description: 标记当前用户所有未读消息为已读
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+  /api/v1/notifications/messages/unread_count/:
+    get:
+      operationId: api_v1_notifications_messages_unread_count_retrieve
+      description: 收件箱视图：仅支持 GET (列表、详情) 和标记已读
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+  /api/v1/points/me/:
+    get:
+      operationId: api_v1_points_me_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/points/sign/:
+    post:
+      operationId: api_v1_points_sign_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    ArticleDetail:
+      type: object
+      description: 文章详情序列化器（包含作者详细信息）
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          allOf:
+          - $ref: '#/components/schemas/UserProfile'
+          readOnly: true
+        title:
+          type: string
+          title: 标题
+          maxLength: 200
+        content:
+          type: string
+          title: 正文
+        cover_image:
+          type: string
+          format: uri
+          nullable: true
+          title: 封面图
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: 创建时间
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: 更新时间
+        views:
+          type: integer
+          readOnly: true
+          title: 阅读量
+        likes:
+          type: integer
+          readOnly: true
+          title: 点赞数
+        is_published:
+          type: boolean
+          title: 是否发布
+      required:
+      - author
+      - content
+      - created_at
+      - id
+      - likes
+      - title
+      - updated_at
+      - views
+    ArticleDetailRequest:
+      type: object
+      description: 文章详情序列化器（包含作者详细信息）
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: 标题
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+          title: 正文
+        cover_image:
+          type: string
+          format: binary
+          nullable: true
+          title: 封面图
+        is_published:
+          type: boolean
+          title: 是否发布
+      required:
+      - content
+      - title
+    ArticleList:
+      type: object
+      description: 文章列表序列化器（字段较少，用于列表展示）
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: 标题
+          maxLength: 200
+        cover_image:
+          type: string
+          format: uri
+          nullable: true
+          title: 封面图
+        author_name:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: 创建时间
+        views:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: 阅读量
+        likes:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: 点赞数
+      required:
+      - author_name
+      - created_at
+      - id
+      - title
+    ArticleWrite:
+      type: object
+      description: 文章写序列化器（用于创建/更新，不展示只读字段）
+      properties:
+        title:
+          type: string
+          title: 标题
+          maxLength: 200
+        content:
+          type: string
+          title: 正文
+        cover_image:
+          type: string
+          format: uri
+          nullable: true
+          title: 封面图
+        is_published:
+          type: boolean
+          title: 是否发布
+      required:
+      - content
+      - title
+    ArticleWriteRequest:
+      type: object
+      description: 文章写序列化器（用于创建/更新，不展示只读字段）
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: 标题
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+          title: 正文
+        cover_image:
+          type: string
+          format: binary
+          nullable: true
+          title: 封面图
+        is_published:
+          type: boolean
+          title: 是否发布
+      required:
+      - content
+      - title
+    Comment:
+      type: object
+      description: 评论序列化器：支持嵌套回复（递归展示 replies）
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        article:
+          type: integer
+          title: 所属文章
+        article_title:
+          type: string
+          readOnly: true
+        author:
+          type: integer
+          readOnly: true
+          title: 评论作者
+        author_name:
+          type: string
+          readOnly: true
+        parent:
+          type: integer
+          nullable: true
+          title: 父评论
+        content:
+          type: string
+          title: 评论内容
+          maxLength: 500
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: 创建时间
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: 更新时间
+        reply_count:
+          type: integer
+          readOnly: true
+      required:
+      - article
+      - article_title
+      - author
+      - author_name
+      - content
+      - created_at
+      - id
+      - reply_count
+      - updated_at
+    CommentWrite:
+      type: object
+      description: 评论写序列化器（用于创建，不展示嵌套回复）
+      properties:
+        article:
+          type: integer
+          title: 所属文章
+        parent:
+          type: integer
+          nullable: true
+          title: 父评论
+        content:
+          type: string
+          title: 评论内容
+          maxLength: 500
+      required:
+      - article
+      - content
+    CommentWriteRequest:
+      type: object
+      description: 评论写序列化器（用于创建，不展示嵌套回复）
+      properties:
+        article:
+          type: integer
+          title: 所属文章
+        parent:
+          type: integer
+          nullable: true
+          title: 父评论
+        content:
+          type: string
+          minLength: 1
+          title: 评论内容
+          maxLength: 500
+      required:
+      - article
+      - content
+    Follow:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          title: 用户
+        user_info:
+          allOf:
+          - $ref: '#/components/schemas/UserProfile'
+          readOnly: true
+        followed_user:
+          type: integer
+          title: 被关注用户
+        followed_user_info:
+          allOf:
+          - $ref: '#/components/schemas/UserProfile'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: 关注时间
+      required:
+      - created_at
+      - followed_user
+      - followed_user_info
+      - id
+      - user
+      - user_info
+    FollowRequest:
+      type: object
+      properties:
+        user:
+          type: integer
+          title: 用户
+        followed_user:
+          type: integer
+          title: 被关注用户
+      required:
+      - followed_user
+      - user
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: 标题
+          maxLength: 200
+        content:
+          type: string
+          title: 内容
+        message_type:
+          $ref: '#/components/schemas/MessageTypeEnum'
+        is_read:
+          type: boolean
+          title: 是否已读
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: 创建时间
+        link:
+          type: string
+          description: 关联链接（如文章详情页）
+          maxLength: 200
+        sender_name:
+          type: string
+          readOnly: true
+          default: 系统
+      required:
+      - content
+      - created_at
+      - id
+      - sender_name
+      - title
+    MessageRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: 标题
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+          title: 内容
+        message_type:
+          $ref: '#/components/schemas/MessageTypeEnum'
+        is_read:
+          type: boolean
+          title: 是否已读
+        link:
+          type: string
+          description: 关联链接（如文章详情页）
+          maxLength: 200
+      required:
+      - content
+      - title
+    MessageTypeEnum:
+      enum:
+      - welcome
+      - comment
+      - reply
+      - like
+      - system
+      type: string
+      description: |-
+        * `welcome` - 欢迎消息
+        * `comment` - 评论通知
+        * `reply` - 回复通知
+        * `like` - 点赞通知
+        * `system` - 系统消息
+    PaginatedArticleListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArticleList'
+    PaginatedCommentList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    PaginatedMessageList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    PatchedArticleWriteRequest:
+      type: object
+      description: 文章写序列化器（用于创建/更新，不展示只读字段）
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: 标题
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+          title: 正文
+        cover_image:
+          type: string
+          format: binary
+          nullable: true
+          title: 封面图
+        is_published:
+          type: boolean
+          title: 是否发布
+    PatchedCommentWriteRequest:
+      type: object
+      description: 评论写序列化器（用于创建，不展示嵌套回复）
+      properties:
+        article:
+          type: integer
+          title: 所属文章
+        parent:
+          type: integer
+          nullable: true
+          title: 父评论
+        content:
+          type: string
+          minLength: 1
+          title: 评论内容
+          maxLength: 500
+    PatchedUserProfileRequest:
+      type: object
+      description: 用户个人资料序列化器（用于获取和更新）
+      properties:
+        bio:
+          type: string
+          title: 个人简介
+          maxLength: 500
+        avatar:
+          type: string
+          format: binary
+          nullable: true
+          title: 头像
+    TokenObtainPair:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    UserProfile:
+      type: object
+      description: 用户个人资料序列化器（用于获取和更新）
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          title: 用户名
+          description: 必填；长度为150个字符或以下；只能包含字母、数字、特殊字符“@”、“.”、“-”和“_”。
+        email:
+          type: string
+          format: email
+          readOnly: true
+          title: 电子邮件地址
+        bio:
+          type: string
+          title: 个人简介
+          maxLength: 500
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+          title: 头像
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+          title: 加入日期
+      required:
+      - date_joined
+      - email
+      - id
+      - username
+    UserProfileRequest:
+      type: object
+      description: 用户个人资料序列化器（用于获取和更新）
+      properties:
+        bio:
+          type: string
+          title: 个人简介
+          maxLength: 500
+        avatar:
+          type: string
+          format: binary
+          nullable: true
+          title: 头像
+    UserRegister:
+      type: object
+      description: 用户注册序列化器
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          title: 用户名
+          description: 必填；长度为150个字符或以下；只能包含字母、数字、特殊字符“@”、“.”、“-”和“_”。
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: 电子邮件地址
+          maxLength: 254
+        bio:
+          type: string
+          title: 个人简介
+          maxLength: 500
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+          title: 头像
+      required:
+      - id
+      - username
+    UserRegisterRequest:
+      type: object
+      description: 用户注册序列化器
+      properties:
+        username:
+          type: string
+          minLength: 1
+          title: 用户名
+          description: 必填；长度为150个字符或以下；只能包含字母、数字、特殊字符“@”、“.”、“-”和“_”。
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: 电子邮件地址
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          minLength: 6
+        password2:
+          type: string
+          writeOnly: true
+          minLength: 6
+          title: 确认密码
+        bio:
+          type: string
+          title: 个人简介
+          maxLength: 500
+        avatar:
+          type: string
+          format: binary
+          nullable: true
+          title: 头像
+      required:
+      - password
+      - password2
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
