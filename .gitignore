@@ -137,6 +137,7 @@ schema.yml
 
 # Docker 相关
 docker-compose.override.yml
+docker-compose.yml
 *.tar
 *.tar.gz
 
