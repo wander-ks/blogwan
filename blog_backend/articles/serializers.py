@@ -4,7 +4,7 @@ from users.serializers import UserProfileSerializer
 
 class ArticleListSerializer(serializers.ModelSerializer):
     """
-    文章列表序列化器（字段较少，用于列表展示）
+    文章列表序列化器（用于分页列表展示）
     """
     author_name = serializers.CharField(source='author.username', read_only=True)
 

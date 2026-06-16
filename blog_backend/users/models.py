@@ -9,7 +9,6 @@ class User(AbstractUser):
     """
     bio = models.TextField('个人简介', max_length=500, blank=True)
     avatar = models.ImageField('头像', upload_to='avatars/', blank=True, null=True)
-    email_verified = models.BooleanField('邮箱是否验证', default=False)
 
     class Meta:
         db_table = 'users_user'

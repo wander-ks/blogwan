@@ -1,5 +1,4 @@
-# Python (Django 后端)
-
+# Python / Django 后端
 
 # 虚拟环境
 venv/
@@ -7,16 +6,21 @@ env/
 ENV/
 env.bak/
 venv.bak/
+.venv/
 
 # Python 编译文件
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.Python
+*.pyc
+*.pyo
+*.mo
 
-# 数据库迁移文件
-# */migrations/*.py
-# !*/migrations/__init__.py
+# 迁移文件
+*/migrations/*.py
+!*/migrations/__init__.py
 
 # 日志文件
 *.log
@@ -25,40 +29,37 @@ logs/
 
 # 本地数据库
 db.sqlite3
+*.sqlite3
 *.db
 
-# Django 静态/媒体文件
+# 静态/媒体文件
 static/
 media/
-*.pot
-*.pyc
-local_settings.py
+staticfiles/
 
-# 环境变量文件
+# 本地配置
+local_settings.py
 .env
 .env.*
 !.env.example
 
 # 测试覆盖率
 .coverage
+.coverage.*
 htmlcov/
 .tox/
 .pytest_cache/
 *.cover
 
-# IDE 配置（Python）
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-.DS_Store
-
-# Celery 日志
+# Celery 文件
 celerybeat-schedule
+celerybeat-schedule.db
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir
 celerybeat.pid
 
-
+# 
 # Vue 前端
 
 
@@ -83,6 +84,7 @@ pnpm-debug.log*
 .eslintcache
 .parcel-cache/
 .turbo/
+.vite/
 
 # 环境变量（前端）
 .env
@@ -90,46 +92,53 @@ pnpm-debug.log*
 .env.production.local
 .env.development.local
 
-# 编辑器配置
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# 系统文件
-Thumbs.db
-.DS_Store
-
-# Vite 临时文件
-.vite/
-vite.config.js.timestamp-*
-
-# 测试覆盖率（前端）
-coverage/
-*.lcov
-
 # 打包文件
 *.tgz
 *.tar.gz
 
-# 通用（前后端共有）
+# IDE / 编辑器
 
-# 备份文件
+# PyCharm
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# 通用编辑器备份
+*.swp
+*.swo
+*~
+
+# 操作系统 / 系统文件
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 构建产物 / 临时文件
+
+# API 文档生成文件
+schema.json
+schema.yml
+*.yaml
+
+# 临时备份文件
 *.bak
-*.tmp
 *.orig
+*.tmp
 
-# 密钥文件
-*.pem
-*.key
-*.crt
-
-# 压缩包
-*.zip
-*.rar
+# Docker 相关
+docker-compose.override.yml
+*.tar
+*.tar.gz
 
 # 输出目录
 output/

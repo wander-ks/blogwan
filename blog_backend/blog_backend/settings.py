@@ -114,7 +114,7 @@ DATABASES = {
         'PASSWORD':'root',
         'HOST': 'localhost',
         'PORT': 3306,
-        'OPTIONS': {'charset': 'utf8mb4'},
+        'OPTIONS': {'charset': 'utf8mb4','init_command': "SET time_zone = '+8:00';",},
     }
 }
 
@@ -203,7 +203,7 @@ REST_FRAMEWORK = {
             'rest_framework.filters.SearchFilter',      # 模糊搜索
             'rest_framework.filters.OrderingFilter',    # 排序
         ],
-    'EXCEPTION_HANDLER': 'blog_backend.utils.custom_exception_handler',
+    # 'EXCEPTION_HANDLER': 'blog_backend.utils.custom_exception_handler',
 }
 
 
@@ -211,8 +211,8 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'BlogWan API 文档',
     'DESCRIPTION': '博客平台后端 API 接口文档，包含用户认证、文章、评论、通知、积分等功能。',
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,   # 避免在 Swagger UI 中显示 schema 本身
-    'COMPONENT_SPLIT_REQUEST': True,  # 将文件上传接口拆分为 multipart 表  单
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
     'SECURITY': [{'BearerAuth': []}],
     'SECURITY_DEFINITIONS': {
         'BearerAuth': {
@@ -284,6 +284,10 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'celery',
         },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
     },
     'loggers': {
         'celery': {

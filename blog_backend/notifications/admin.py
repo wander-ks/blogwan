@@ -11,4 +11,4 @@ class MessageAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content', 'recipient__username', 'sender__username')
     raw_id_fields = ('recipient', 'sender')
     readonly_fields = ('created_at',)
-    date_hierarchy = 'created_at'
+    # date_hierarchy = 'created_at'

@@ -10,4 +10,4 @@ class ArticleAdmin(admin.ModelAdmin):
     list_filter = ('is_published', 'created_at', 'author')
     search_fields = ('title', 'content', 'author__username')
     readonly_fields = ('views', 'likes', 'created_at', 'updated_at')
-    date_hierarchy = 'created_at'
+    # date_hierarchy = 'created_at'

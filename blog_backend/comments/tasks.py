@@ -7,7 +7,6 @@ def send_comment_notification(article_id, comment_id, parent_author_id=None):
     发送评论通知站内信
     """
     from django.contrib.auth import get_user_model
-    from articles.models import Article
     from comments.models import Comment
 
     User = get_user_model()

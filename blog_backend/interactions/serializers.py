@@ -7,8 +7,8 @@ class ArticleLikeSerializer(serializers.ModelSerializer):
     """
     username = serializers.CharField(source='user.username', read_only=True)
     article_title = serializers.CharField(source='article.title', read_only=True)
-
+    article_id = serializers.IntegerField(source='article.id', read_only=True)
     class Meta:
         model = ArticleLike
-        fields = ['id', 'username', 'article', 'article_title', 'created_at']
+        fields = ['id', 'username', 'article_id', 'article_title', 'created_at']
         read_only_fields = ['id', 'created_at']

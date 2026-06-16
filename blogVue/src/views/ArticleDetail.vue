@@ -196,12 +196,21 @@ const confirmDelete = async () => {
   }
 }
 const toggleLike = async () => {
+try {
   if (!isLogin.value) return router.push('/login')
+  if (userInfo.value.id === article.value.author.id) {
+    alert("不能给自己的文章点赞")
+    return
+  }
   const res = await likeArticle(route.params.id)
   article.value.likes = res.data.likes_count
   liked.value = res.data.liked
   // 触发积分刷新
   window.dispatchEvent(new CustomEvent('pointsUpdated'))
+  } catch (err) {
+    const msg = err.response?.data?.detail || "不能给自己的文章点赞"
+    alert(msg)
+  }
 }
 const scrollToComment = () => {
   const hash = route.hash

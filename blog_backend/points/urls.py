@@ -16,6 +16,6 @@ Including another URLconf
 from django.urls import path
 from points.views import daily_sign,get_user_points
 urlpatterns = [
-    path('sign/', daily_sign, name='daily_sign'),           # 签到接口
-    path('me/', get_user_points, name='user_points'),       # 获取当前用户积分和今日签到状态
+    path('sign/', daily_sign, name='daily_sign'),
+    path('me/', get_user_points, name='user_points'),
 ]

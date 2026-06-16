@@ -15,7 +15,7 @@
             </div>
             <div class="mb-3">
               <label class="form-label">密码</label>
-              <input type="password" class="form-control" v-model="form.password" required />
+              <input type="password" class="form-control" v-model="form.password" required autocomplete="current-password" />
             </div>
             <!-- 按钮 (Button) -->
             <button type="submit" class="btn btn-primary w-100" :disabled="loading">登录</button>

@@ -27,20 +27,20 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'interactions.tasks.sync_likes_from_redis',
         'schedule': 300,   # 秒，也可以用 crontab
     },
-    # 每天凌晨2点清理未激活用户
-    'clean-inactive-users-daily': {
-        'task': 'users.tasks.clean_inactive_users',
-        'schedule': crontab(hour=2, minute=0),
-    },
-    # 每小时重建热门文章缓存（可选）
-    'rebuild-hot-articles-cache': {
-        'task': 'articles.tasks.rebuild_article_list_cache',
-        'schedule': 3600,
-    },
+
+    # 每5分钟批量保存点赞关系明细
+    # 'sync-save-every-5-minutes': {
+    #     'task': 'interactions.tasks.batch_save_like_relations',
+    #     'schedule': 300,
+    # },
+
+    # 每天8点向所有用户发送签到提醒站内信
     'send-daily-sign-reminder': {
         'task': 'points.tasks.send_daily_sign_reminder',
         'schedule': crontab(hour=8, minute=0),
     },
+
+    # 检查当天是否有节日，若有则给所有用户发放积分
     'check-festival-bonus': {
         'task': 'points.tasks.check_festival_bonus',
         'schedule': crontab(hour=8, minute=0),

@@ -47,6 +47,7 @@
                 :class="{ 'is-invalid': errors.password }"
                 v-model="form.password"
                 required
+                autocomplete="new-password"
               />
               <div class="invalid-feedback" v-if="errors.password">{{ errors.password }}</div>
             </div>
@@ -60,6 +61,7 @@
                 :class="{ 'is-invalid': errors.password2 }"
                 v-model="form.password2"
                 required
+                autocomplete="new-password"
               />
               <div class="invalid-feedback" v-if="errors.password2">{{ errors.password2 }}</div>
             </div>

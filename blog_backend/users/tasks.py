@@ -8,14 +8,11 @@ def send_welcome_message(user_id, username):
     """
     from django.contrib.auth import get_user_model
     User = get_user_model()
-    try:
-        user = User.objects.get(id=user_id)
-        Message.objects.create(
-            recipient=user,
-            message_type='welcome',
-            title=f'欢迎加入 BlogWan，{username}！',
-            content='感谢您注册博客平台。在这里您可以发布技术文章、参与讨论。祝您使用愉快！',
-            link='/'
-        )
-    except User.DoesNotExist:
-        pass
+    user = User.objects.get(id=user_id)
+    Message.objects.create(
+        recipient=user,
+        message_type='welcome',
+        title=f'欢迎加入 BlogWan，{username}！',
+        content='感谢您注册博客平台。在这里您可以发布技术文章、参与讨论。祝您使用愉快！',
+        link='/'
+    )

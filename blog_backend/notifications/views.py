@@ -9,7 +9,7 @@ from notifications.serializers import MessageSerializer
 
 class MessageViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    收件箱视图：仅支持 GET (列表、详情) 和标记已读
+        站内信视图集，提供只读操作 + 标记已读/删除。
     """
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]

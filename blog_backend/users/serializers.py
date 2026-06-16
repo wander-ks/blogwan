@@ -7,8 +7,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
        - 自动校验用户名、邮箱唯一性
        - 密码加密存储
    """
-    password = serializers.CharField(write_only=True, min_length=6, style={'input_type': 'password'},help_text="密码，至少6位")
-    password2 = serializers.CharField(write_only=True, min_length=6, style={'input_type': 'password'}, label='确认密码',help_text="确认密码，需与密码一致")
+    password = serializers.CharField(write_only=True, min_length=6,help_text="密码，至少6位")
+    password2 = serializers.CharField(write_only=True, min_length=6,label='确认密码',help_text="确认密码，需与密码一致")
 
     class Meta:
         model = User
@@ -38,10 +38,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # 移除 password2，避免存入数据库
         validated_data.pop('password2')
-        password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)   # 加密存储
-        user.save()
+        user =User.objects.create_user(**validated_data)
         return user
 
 

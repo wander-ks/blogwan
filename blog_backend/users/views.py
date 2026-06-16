@@ -52,10 +52,8 @@ class RegisterView(generics.CreateAPIView):
             ),
         ]
     )
-
     def perform_create(self, serializer):
         user = serializer.save()
-        # 发送欢迎站内信
         send_welcome_message.delay(user.id, user.username)
 
 
@@ -65,17 +63,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     """
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
-    parser_classes = [JSONParser,MultiPartParser, FormParser]   # 支持文件上传（头像）
+    parser_classes = [JSONParser,MultiPartParser, FormParser]
 
     def get_object(self):
-        # 返回当前登录用户
         return self.request.user
-
-    def update(self, request, *args, **kwargs):
-        # 部分更新，允许只修改部分字段
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)

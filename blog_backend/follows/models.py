@@ -3,17 +3,18 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.conf import settings
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 class Follow(models.Model):
     """关注关系表"""
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         related_name='following',
         verbose_name='用户'
     )
     followed_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         related_name='followers',
         verbose_name='被关注用户'

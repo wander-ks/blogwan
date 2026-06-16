@@ -18,7 +18,6 @@ class FollowViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['post'], url_path='follow/(?P<user_id>[^/.]+)')
     def follow_user(self, request, user_id):
-        """关注某个用户"""
         if request.user.id == int(user_id):
             return Response({'error': '不能关注自己'}, status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -28,8 +27,6 @@ class FollowViewSet(viewsets.GenericViewSet):
 
         if is_following(request.user.id, user_id):
             return Response({'error': '已经关注过了'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # 写入数据库和 Redis
         try:
             Follow.objects.create(user=request.user, followed_user=followed_user)
             add_follow(request.user.id, int(user_id))
@@ -39,7 +36,6 @@ class FollowViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['post'], url_path='unfollow/(?P<user_id>[^/.]+)')
     def unfollow_user(self, request, user_id):
-        """取消关注"""
         try:
             follow = Follow.objects.get(user=request.user, followed_user_id=user_id)
             follow.delete()
@@ -50,7 +46,6 @@ class FollowViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['get'])
     def following_list(self, request):
-        """当前用户关注的用户列表"""
         queryset = Follow.objects.filter(user=request.user).select_related('followed_user')
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -61,13 +56,11 @@ class FollowViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['get'])
     def follower_list(self, request):
-        """当前用户的粉丝列表"""
         follows = Follow.objects.filter(followed_user=request.user).select_related('user')
         serializer = self.get_serializer(follows, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'], url_path='status/(?P<user_id>[^/.]+)')
     def follow_status(self, request, user_id):
-        """查询当前用户是否关注某用户"""
         following = is_following(request.user.id, int(user_id))
         return Response({'is_following': following})

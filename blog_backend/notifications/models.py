@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.conf import settings
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class Message(models.Model):
     """
@@ -17,15 +19,16 @@ class Message(models.Model):
         ('system', '系统消息'),
     )
     recipient = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         related_name='received_messages',
         verbose_name='收件人'
     )
     sender = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
-        null=True, blank=True,
+        null=True,
+        blank=True,
         related_name='sent_messages',
         verbose_name='发件人'
     )

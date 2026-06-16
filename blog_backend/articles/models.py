@@ -1,8 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.db import models
-
 # Create your models here.
-from django.conf import settings
-
+User = get_user_model()
 class Article(models.Model):
     """
     文章模型
@@ -11,7 +10,7 @@ class Article(models.Model):
     content = models.TextField('正文')
     cover_image = models.ImageField('封面图', upload_to='covers/', blank=True, null=True)
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         related_name='articles',
         verbose_name='作者'
@@ -34,3 +33,11 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+class ArticleLikePointRecord(models.Model):
+    """记录用户给文章点赞后是否已发放作者积分，兜底redis丢失场景"""
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    class Meta:
+        db_table = 'article_like_point_record'
+        unique_together = ("article", "user")

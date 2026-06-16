@@ -1,7 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 # Create your models here.
-from django.conf import settings
+User = get_user_model()
 
 class Comment(models.Model):
     """
@@ -14,7 +15,7 @@ class Comment(models.Model):
         verbose_name='所属文章'
     )
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         verbose_name='评论作者'
     )

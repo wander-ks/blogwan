@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/v1/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # Redoc 文档
     path('api/v1/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    
     path('api/v1/articles/download-file/', download_file, name='download_file'),
     path('admin/', admin.site.urls),
     re_path(r'^api/v1/auth/',include('users.urls')),

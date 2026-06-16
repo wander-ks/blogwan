@@ -11,7 +11,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ('article', 'author', 'created_at')
     search_fields = ('content', 'author__username', 'article__title')
     raw_id_fields = ('article', 'author', 'parent')
-    date_hierarchy = 'created_at'
+    # date_hierarchy = 'created_at'
 
     def content_preview(self, obj):
         return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content

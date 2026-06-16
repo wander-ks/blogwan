@@ -1,15 +1,14 @@
 from django.db import models
 
 # Create your models here.
-
-from django.conf import settings
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 class ArticleLike(models.Model):
     """
     记录用户对文章的点赞关系，防止重复点赞
     """
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         related_name='liked_articles',
         verbose_name='用户'

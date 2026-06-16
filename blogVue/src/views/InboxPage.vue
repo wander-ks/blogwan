@@ -91,9 +91,11 @@ const markReadBeforeNavigate = async (id, event) => {
   if (msg) msg.is_read = true
   // 通知导航栏更新角标
   window.dispatchEvent(new CustomEvent('unreadCountUpdated'))
-  // 执行跳转
-  const link = event.currentTarget.getAttribute('to')
-  router.push(link)
+  // 获取链接：优先从 event.currentTarget 取，如果为 null 则从 event.target 向上查找
+  let linkEl = event.currentTarget
+  if (!linkEl) linkEl = event.target.closest('router-link') || event.target
+  const link = linkEl?.getAttribute('to')
+  if (link) router.push(link)
 }
 
 onMounted(async () => {

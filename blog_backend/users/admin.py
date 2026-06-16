@@ -12,12 +12,9 @@ admin.site.index_title = '欢迎使用博客管理后台'
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    """
-    自定义用户模型在 admin 中的展示
-    """
-    list_display = ('username', 'email', 'bio', 'avatar', 'email_verified', 'date_joined')
+    list_display = ('username', 'email', 'bio', 'avatar', 'date_joined')
     fieldsets = BaseUserAdmin.fieldsets + (
-        ('扩展信息', {'fields': ('bio', 'avatar', 'email_verified')}),
+        ('扩展信息', {'fields': ('bio', 'avatar',)}),
     )
 
 
